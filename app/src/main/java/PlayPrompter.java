@@ -6,6 +6,8 @@ import MachineLearning.*;
 
 public class PlayPrompter {
 
+    public int playSpeed;
+
     public int playerTurn; // Identifies whose turn it is inside a trick
     public boolean trumpCalled;
 
@@ -13,18 +15,22 @@ public class PlayPrompter {
     private GUI gui;
     
     private boolean firstInit;
+    private boolean firstGame;
 
     private MasterLogger logger;
 
     private CoinTosser tosser;
     
     /**
-     * Creates a new PlayPrompter.
-     * 
-     * @param logger Logger if logging is desired, AntiLogger if not.
+     * Create a new PlayPrompter instance.
+     * @param logger pass in a logger is logging is desired, an antilogger is not.
+     * @param gui pass in a GUI instance.
+     * @param playSpeed in milliseconds how long of a pause between each step of play.
      */
-    PlayPrompter(MasterLogger logger, GUI gui) {
+    PlayPrompter(MasterLogger logger, GUI gui, int playSpeed) {
         this.firstInit = true;
+        this.firstGame = true;
+        this.playSpeed = playSpeed;
         this.logger = logger;
         this.gui = gui;
         
@@ -50,22 +56,22 @@ public class PlayPrompter {
 
         // Randomly roll for dealer, set leader (player who leads bidding round and first hand of trick)
         gui.updateMainText("Initializing game...");
-        this.sleep(500);
+        this.sleep(playSpeed);
         gui.updateMainText("Randomly deciding who goes first...");
-        this.sleep(1000);
+        this.sleep(playSpeed);
         this.engine.dealer = (int)(Math.random() * 4);
         this.engine.leader = (this.engine.dealer + 1)%4;
 
         // Handles shuffling or prompting user to shuffle.
             if (this.engine.dealer == 0) {
                 gui.updateMainText("You're dealer!");
-                this.sleep(1000);
+                this.sleep(playSpeed);
                 gui.updateMainText("Shuffle the deck a few times.");
                 gui.buildShuffleButtons();
             } else {
                 gui.updateMainText("Player " + this.engine.dealer + " is dealer.");
                 engine.deck.shuffle();
-                this.sleep(1000);
+                this.sleep(playSpeed);
                 mainLoop();
             }
     }
@@ -75,15 +81,15 @@ public class PlayPrompter {
         while(this.engine.teamOneScore < 10 && this.engine.teamTwoScore < 10) {
 
             // Handles shuffling or prompting user to shuffle.
-            if (this.engine.dealer == 0) {
+            if (this.engine.dealer == 0 && !firstGame) {
                 gui.updateMainText("You're dealer!");
-                this.sleep(1000);
+                this.sleep(this.playSpeed);
                 gui.updateMainText("Shuffle the deck a few times.");
                 gui.buildShuffleButtonsNoLoop();
-            } else {
+            } else if (this.engine.dealer != 0 && !firstGame) {
                 gui.updateMainText("Player " + this.engine.dealer + " is dealer.");
                 engine.deck.shuffle();
-                this.sleep(1000);
+                this.sleep(this.playSpeed);
             }
 
             /**
@@ -95,7 +101,7 @@ public class PlayPrompter {
                 gui.updateMainText("Player " + this.engine.dealer + " is dealing.");
             }
             this.run(() -> this.gui.displayTrickInfo());
-            this.sleep(500);
+            this.sleep(playSpeed);
 
             // Deal cards in the background as well as populate face-down cards in players' hands via GUI
             for (int i = 0; i < 5; i++) {
@@ -109,21 +115,21 @@ public class PlayPrompter {
             }
 
             // Pause, then reveal the player his/her hand
-            this.sleep(500);
+            this.sleep(playSpeed);
             this.run(() -> gui.displayHand(0, engine.playerHands[0]));
-            this.sleep(500);
+            this.sleep(playSpeed);
 
             // Put bidding card in the center
             this.engine.bidCard = engine.deck.pop();
             this.run(() -> gui.buildCenter("The " + this.engine.bidCard.name.toLowerCase() + " is showing.", this.engine.bidCard, false));
             this.run(() -> this.gui.displayTrickInfo());
-            this.sleep(500);
+            this.sleep(playSpeed);
 
             /**
              * Bidding.
              */
             // Initial bidding round, turn a card over
-            this.sleep(1000);
+            this.sleep(playSpeed);
             this.playerTurn = this.engine.leader;
             for (int i = 0; i < 4; i++) {
                 if (this.playerTurn == 0) {
@@ -148,13 +154,13 @@ public class PlayPrompter {
                     }
                 }
                 this.playerTurn = (this.playerTurn + 1) % 4; // Neat modular stuff
-                this.sleep(1000);
+                this.sleep(playSpeed);
             }
             
             // If a full round of initial bidding is done, we go on to the free bidding round.
             if (!this.trumpCalled) {
                 this.gui.updateMainText("All players passed. Moving on to free bids.");
-                this.sleep(1000);
+                this.sleep(playSpeed);
                 for (int i = 0; i < 3; i++) {
                     if (this.playerTurn == 0) {
                         this.run(() -> gui.buildFreeBidButtons("Pick a trump suit"));
@@ -180,12 +186,12 @@ public class PlayPrompter {
                         }
                     }
                     this.playerTurn = (this.playerTurn + 1) % 4;
-                    this.sleep(1000);
+                    this.sleep(playSpeed);
                 }
                 // If three players passed, we're back to the dealer. We are, in fact, playing screw the dealer.
                 if (!this.trumpCalled) {
                     this.gui.updateMainText("Screw the dealer. Dealer must pick a suit.");
-                    this.sleep(1000);
+                    this.sleep(playSpeed);
                     if (this.playerTurn == 0) {
                         this.run(() -> gui.buildFreeBidButtonsNoPass("Bidding on " + this.engine.bidCard.name));
                         this.gui.updateMainText("You called " + this.engine.trump.toString() + " as the trump suit.");
@@ -199,7 +205,7 @@ public class PlayPrompter {
             } else {
                 this.engine.setTrump(this.engine.bidCard.suit);
                 this.run(() -> this.gui.displayTrickInfo());
-                this.sleep(1000);
+                this.sleep(playSpeed);
                 if (this.engine.dealer == 0) {
                     this.run(() -> this.gui.buildBidCardSwapButtons("What card do you want to swap?"));
                     this.engine.swapBidCard();
@@ -217,7 +223,7 @@ public class PlayPrompter {
                     this.run(() -> this.gui.buildCenter("Player " + this.engine.dealer + " swapped cards.", null, true));
                 }
                 this.run(() -> this.gui.displayTrickInfo());
-                this.sleep(1000);
+                this.sleep(playSpeed);
             }
 
             this.playerTurn = this.engine.leader;
@@ -226,7 +232,7 @@ public class PlayPrompter {
             /**
              * Playing tricks
              */
-            this.sleep(1000);
+            this.sleep(playSpeed);
             for (int i = 0; i < 5; i++) { // Five tricks
                 for (int j = 0; j < 4; j++) { // Four players play per trick
                     // If it's the player's turn
@@ -247,7 +253,7 @@ public class PlayPrompter {
                     this.run(() -> gui.displayPlayedCards());
                     this.run(() -> gui.displayHand(0, this.engine.playerHands[0])); // Bit of redundancy to keep player 0's hand up
                     this.playerTurn = (this.playerTurn + 1)%4;
-                    this.sleep(1000);
+                    this.sleep(playSpeed);
                 }
 
                 // Somebody won the trick. Update all relevant things based on that info
@@ -262,7 +268,7 @@ public class PlayPrompter {
                 // Clear the middle of the screen, prep for next trick
                 this.engine.clearPlayedCards();
                 this.gui.displayPlayedCards();
-                this.sleep(1000);
+                this.sleep(playSpeed);
             }
 
             int[] score = this.engine.getRoundWinner();
@@ -270,6 +276,8 @@ public class PlayPrompter {
             this.engine.updateScore();
             this.gui.displayScore();
             this.engine.resetAfterTricks();
+            this.engine.dealer = (this.engine.dealer + 1)%4;
+            this.firstGame = false;
             this.sleep(5000);
         }
 

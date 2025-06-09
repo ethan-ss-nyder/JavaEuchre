@@ -29,9 +29,6 @@ public class EuchreEngine {
     private Deck playerThreeHand;
     public Deck[] playerHands;
 
-    // Should be updated for every players turn to make sure logic works properly
-    private Card[] opponentPlayedCards = new Card[2];
-    private Card teammateCard;
     public int offense = -1; // 0 for team 1, 1 for team 2. Sorry
 
     public Card bidCardSwap;
@@ -89,6 +86,7 @@ public class EuchreEngine {
 
         this.trickScore[0] = 0;
         this.trickScore[1] = 0;
+        this.offense = -1;
     }
 
     /**
@@ -109,13 +107,6 @@ public class EuchreEngine {
      * @param card: the played card.
      */
     public void giveUsedCard(Card card) {
-        
-        // This replaces a trickPlayedCards reset function.
-        // Just keep piling cards trick after trick.
-        if (this.trickPlayedCards.getDeck().length == 5) {
-            this.trickPlayedCards = new Deck();
-        }
-
         this.trickPlayedCards.add(card);
         this.playedCards.add(card);
     }
@@ -276,28 +267,6 @@ public class EuchreEngine {
     }
 
     /**
-     * Give the engine cards played previous to its turn in the current round.
-     * 
-     * @param cards: all cards played previous to the engine's turn.
-     */
-    void giveRound(Card[] cards) {
-        opponentPlayedCards[0] = cards[0]; // Assume cards is not empty (euchreengine is not leading).
-        if (cards.length == 2) { // Two cards being played means euchreengine is third player. Teammate led.
-            teammateCard = cards[1];
-            opponentPlayedCards[2] = null;
-        } else if (cards.length == 3) { // Three cards is best case. Most knowledge to go off of.
-            teammateCard = cards[1];
-            opponentPlayedCards[2] = cards[2];
-        } else { // Set all round card info to null to allow bugs to trickle down, if necessary.
-            opponentPlayedCards[0] = null;
-            opponentPlayedCards[1] = null;
-            teammateCard = null;
-            led = null;
-        }
-        led = opponentPlayedCards[0].suit;
-    }
-
-    /**
      * Assuming a current giveRound() and giveHand(), returns a boolean and card relating to the player being able to follow suit.
      * @return an Object[] composed of a boolean (true or false, can follow suit?) and a Deck of Cards that can follow suit.
      */
@@ -306,33 +275,5 @@ public class EuchreEngine {
             if (card.suit == led) return true;
         }
         return false;
-    }
-
-    /**
-     * Says whether or not teammate has won the trick (so far).
-     * @return True if teammate is winning. False if not.
-     */
-    public boolean teammateHasIt() {
-
-        // If teammate has not played, teammate does not, in fact, have it.
-        if (teammateCard == null) return false;
-
-        // We do not need to check if opponentPlayedCards[0] == null if the above statement passes.
-
-        // Evaluate teammate's card against the one opponent played card.
-        if (opponentPlayedCards[1] == null) {
-            if (teammateCard.value > opponentPlayedCards[0].value) {
-                return true;
-            } else {
-                return false;
-            }
-        } else {
-            // Evaluate teammate's card against both opponent's played cards.
-            if (teammateCard.value > opponentPlayedCards[0].value && teammateCard.value > opponentPlayedCards[1].value) {
-                return true;
-            } else {
-                return false;
-            }
-        }
     }
 }

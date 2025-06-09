@@ -147,7 +147,7 @@ public class GUI {
      * Updates the top right of the display with the trick/game score
      */
     public void displayScore() {
-        this.scorePanel.removeAll();
+        this.frame.remove(this.scorePanel);
 
         this.scorePanel = new JPanel(new GridBagLayout());
         GridBagConstraints constraints = new GridBagConstraints();
