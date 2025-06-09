@@ -14,12 +14,18 @@ dependencies {
 // Apply a specific Java toolchain to ease working on different environments.
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(24)
+        languageVersion.set(JavaLanguageVersion.of(21))
     }
 }
 
 application {
     mainClass.set("Main")
+}
+
+tasks.named<Jar>("jar") {
+    manifest {
+        attributes["Main-Class"] = application.mainClass.get()
+    }
 }
 
 tasks.test {

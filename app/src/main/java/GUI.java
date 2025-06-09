@@ -224,7 +224,7 @@ public class GUI {
         // File Menu
         JMenu fileMenu = new JMenu("File");
         JMenuItem newGame = new JMenuItem("New Game");
-        newGame.addActionListener(_ -> {
+        newGame.addActionListener(e -> {
             System.out.println("New game!");
             this.prompter.init();
         });
@@ -233,7 +233,7 @@ public class GUI {
         // View Menu
         JMenu viewMenu = new JMenu("View");
         JCheckBoxMenuItem seeHands = new JCheckBoxMenuItem("Show Other Hands");
-        seeHands.addActionListener(_ -> {
+        seeHands.addActionListener(e -> {
             boolean selected = seeHands.isSelected();
             if (selected) {
                 System.out.println("Cheater!");
@@ -537,13 +537,13 @@ public class GUI {
         JButton shuffleButton = new JButton("Shuffle");
         JButton doneButton = new JButton("Done");
 
-        shuffleButton.addActionListener(_ -> {
+        shuffleButton.addActionListener(e -> {
             this.engine.deck.shuffle();
             shuffled.set(true);
             System.out.println("Shuffle.");
         });
 
-        doneButton.addActionListener(_ -> {
+        doneButton.addActionListener(e -> {
             if (!shuffled.get()) {
                 System.out.println("Shuffling deck anyways. Cheater.");
                 this.engine.deck.shuffle();
@@ -577,13 +577,13 @@ public class GUI {
         JButton shuffleButton = new JButton("Shuffle");
         JButton doneButton = new JButton("Done");
 
-        shuffleButton.addActionListener(_ -> {
+        shuffleButton.addActionListener(e -> {
             this.engine.deck.shuffle();
             shuffled.set(true);
             System.out.println("Shuffle.");
         });
 
-        doneButton.addActionListener(_ -> {
+        doneButton.addActionListener(e -> {
             if (!shuffled.get()) {
                 System.out.println("Shuffling deck anyways. Cheater.");
                 this.engine.deck.shuffle();
@@ -615,12 +615,12 @@ public class GUI {
         JButton passButton = new JButton("Pass");
         JButton pickItUpButton = new JButton("Pick it up");
 
-        passButton.addActionListener(_ -> {
+        passButton.addActionListener(e -> {
             this.prompter.trumpCalled = false;
             dialog.dispose();
         });
 
-        pickItUpButton.addActionListener(_ -> {
+        pickItUpButton.addActionListener(e -> {
             this.prompter.trumpCalled = true;
             dialog.dispose();
         });
@@ -651,33 +651,33 @@ public class GUI {
         JButton diamondButton = new JButton("Diamonds");
         JButton heartButton = new JButton("Hearts");
 
-        passButton.addActionListener(_ -> {
+        passButton.addActionListener(e -> {
             this.prompter.trumpCalled = false;
             dialog.dispose();
         });
 
-        spadeButton.addActionListener(_ -> {
+        spadeButton.addActionListener(e -> {
             this.prompter.trumpCalled = true;
             this.engine.setTrump(Card.Suit.SPADES);
             this.engine.setOffense(0);
             dialog.dispose();
         });
 
-        clubButton.addActionListener(_ -> {
+        clubButton.addActionListener(e -> {
             this.prompter.trumpCalled = true;
             this.engine.setTrump(Card.Suit.CLUBS);
             this.engine.setOffense(0);
             dialog.dispose();
         });
 
-        diamondButton.addActionListener(_ -> {
+        diamondButton.addActionListener(e -> {
             this.prompter.trumpCalled = true;
             this.engine.setTrump(Card.Suit.DIAMONDS);
             this.engine.setOffense(0);
             dialog.dispose();
         });
 
-        heartButton.addActionListener(_ -> {
+        heartButton.addActionListener(e -> {
             this.prompter.trumpCalled = true;
             this.engine.setTrump(Card.Suit.HEARTS);
             this.engine.setOffense(0);
@@ -712,28 +712,28 @@ public class GUI {
         JButton diamondButton = new JButton("Diamonds");
         JButton heartButton = new JButton("Hearts");
 
-        spadeButton.addActionListener(_ -> {
+        spadeButton.addActionListener(e -> {
             this.prompter.trumpCalled = true;
             this.engine.setTrump(Card.Suit.SPADES);
             this.engine.setOffense(0);
             dialog.dispose();
         });
 
-        clubButton.addActionListener(_ -> {
+        clubButton.addActionListener(e -> {
             this.prompter.trumpCalled = true;
             this.engine.setTrump(Card.Suit.CLUBS);
             this.engine.setOffense(0);
             dialog.dispose();
         });
 
-        diamondButton.addActionListener(_ -> {
+        diamondButton.addActionListener(e -> {
             this.prompter.trumpCalled = true;
             this.engine.setTrump(Card.Suit.DIAMONDS);
             this.engine.setOffense(0);
             dialog.dispose();
         });
 
-        heartButton.addActionListener(_ -> {
+        heartButton.addActionListener(e -> {
             this.prompter.trumpCalled = true;
             this.engine.setTrump(Card.Suit.HEARTS);
             this.engine.setOffense(0);
@@ -760,7 +760,7 @@ public class GUI {
         JPanel biddingPanel = new JPanel();
         for (Card card : this.engine.playerHands[0].getDeck()) {
             JButton temp = new JButton(card.name);
-            temp.addActionListener(_ -> {
+            temp.addActionListener(e -> {
                 this.engine.bidCardSwap = card;
                 dialog.dispose();
             });
@@ -785,7 +785,7 @@ public class GUI {
         for (Card card : this.engine.playerHands[0].getDeck()) {
             JButton temp = new JButton(card.name);
             int index = integer.getAndIncrement();
-            temp.addActionListener(_ -> {
+            temp.addActionListener(e -> {
                 this.engine.playCard(0, index);
                 dialog.dispose();
             });
