@@ -37,13 +37,6 @@ public class GameLogger implements MasterLogger {
     }
 
     /**
-     * This helps Prompter tell which logger is active.
-     */
-    public boolean isLogging() {
-        return true;
-    }
-
-    /**
      * Ends the current round and writes round and all trick data to .jsonl file.
      */
     public void finishRound() {
@@ -64,6 +57,7 @@ public class GameLogger implements MasterLogger {
     public void finishTrick() {
         tricks.put(trick);
         trick.clear();
+        this.ID = this.getLineCount();
     }
 
     /**
@@ -133,7 +127,3 @@ public class GameLogger implements MasterLogger {
         return i;
     }
 }
-
-
-// Log trick info
-//this.logger.recordBotPlayInfo(this.engine.trickPlayedCards.getDeck()[2], winner == 2, winner == 2 || winner == 0);

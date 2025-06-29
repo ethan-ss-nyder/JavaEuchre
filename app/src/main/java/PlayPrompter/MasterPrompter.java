@@ -82,7 +82,7 @@ public abstract class MasterPrompter {
                 final int index2 = i;
                 this.run(() -> gui.displayHandDown(index, index2));
                 this.engine.playerHands[j].add(this.engine.deck.pop());
-                this.sleep(100);
+                this.sleep(playSpeed / 10);
             }
         }
         this.sleep(playSpeed);

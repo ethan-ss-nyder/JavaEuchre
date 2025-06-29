@@ -1,6 +1,5 @@
 package MachineLearning;
 
-import Euchre.Card;
 import Euchre.Deck;
 import Euchre.EuchreEngine;
 import Euchre.Card.Suit;
@@ -67,7 +66,7 @@ public class CoinTosser {
 
         // If CoinTosser has only trump cards, just take the top card
         if (temp.getDeck().length == 5) {
-            this.engine.bidCardSwap = this.engine.playerHands[player].takeTopCard();
+            this.engine.bidCardSwap = temp.takeTopCard();
         // Otherwise just take the top card in temp
         } else { 
             this.engine.bidCardSwap = temp.takeTopCard();

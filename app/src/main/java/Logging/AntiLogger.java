@@ -9,11 +9,6 @@ import Euchre.Card;
 public class AntiLogger implements MasterLogger {
 
     @Override
-    public boolean isLogging() {
-        return false;
-    }
-
-    @Override
     public void finishRound() {
     }
 

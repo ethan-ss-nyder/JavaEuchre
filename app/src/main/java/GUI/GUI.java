@@ -145,6 +145,13 @@ public class GUI {
         }
     }
 
+    public void displayHands() {
+        for (int i = 0; i < 4; i++) {
+            playerPanels[i].removeAll();
+            this.displayHand(i, this.engine.playerHands[i]);
+        }
+    }
+
     /**
      * Updates the top right of the display with the trick/game score
      */
