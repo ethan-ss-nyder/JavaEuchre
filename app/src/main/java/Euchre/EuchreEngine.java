@@ -160,7 +160,6 @@ public class EuchreEngine {
         this.trickPlayedCards = new Deck();
     }
 
-
     /**
      * Swaps the specified card from a players hand with the bid card.
      * @param playerCard the specified card.

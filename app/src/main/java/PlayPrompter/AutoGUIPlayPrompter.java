@@ -32,13 +32,14 @@ public class AutoGUIPlayPrompter extends MasterPrompter {
         }
 
         if (this.engine.teamOneScore >= 10) {
-            System.out.println("Team one won! (Your team!)");
             gui.updateMainText("Team one wins the game!");
-            this.sleep(5000);
+            this.sleep(playSpeed * 5);
         } else if (this.engine.teamTwoScore >= 10) {
             gui.updateMainText("Team two wins the game!");
-            this.sleep(5000);
+            this.sleep(playSpeed * 5);
         }
+
+        this.init();
     }
 
     @Override
