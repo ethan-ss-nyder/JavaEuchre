@@ -2,9 +2,12 @@ package GUI;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 
+import org.apache.commons.math3.ml.distance.DistanceMeasure;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -24,8 +27,8 @@ import PlayPrompter.MasterPrompter;
 
 public class GUI {
 
-    private static final int WINDOW_WIDTH = 800;
-    private static final int WINDOW_HEIGHT = 600;
+    private static final int WINDOW_WIDTH = 1000;
+    private static final int WINDOW_HEIGHT = 800;
     private static final String WINDOW_NAME = "JavaEuchre";
 
     private JFrame frame;
@@ -292,6 +295,16 @@ public class GUI {
         this.playerTwoPanel.setBorder(new LineBorder(Color.BLACK));
         this.playerThreePanel.setBorder(new LineBorder(Color.BLACK));
 
+        this.playerZeroPanel.setPreferredSize(new Dimension((int)(this.frame.getWidth() * 0.9), (int)(this.frame.getWidth() * 0.12)));
+        this.playerOnePanel.setPreferredSize(new Dimension((int)(this.frame.getWidth() * 0.12), (int)(this.frame.getWidth() * 0.9)));
+        this.playerTwoPanel.setPreferredSize(new Dimension((int)(this.frame.getWidth() * 0.9), (int)(this.frame.getWidth() * 0.12)));
+        this.playerThreePanel.setPreferredSize(new Dimension((int)(this.frame.getWidth() * 0.12), (int)(this.frame.getWidth() * 0.9)));
+
+        this.playerZeroPanel.setMinimumSize(new Dimension((int)(this.frame.getWidth() * 0.9), (int)(this.frame.getWidth() * 0.12)));
+        this.playerOnePanel.setMinimumSize(new Dimension((int)(this.frame.getWidth() * 0.12), (int)(this.frame.getWidth() * 0.9)));
+        this.playerTwoPanel.setMinimumSize(new Dimension((int)(this.frame.getWidth() * 0.9), (int)(this.frame.getWidth() * 0.12)));
+        this.playerThreePanel.setMinimumSize(new Dimension((int)(this.frame.getWidth() * 0.12), (int)(this.frame.getWidth() * 0.9)));
+
         JLabel p0label = new JLabel("Me");
         p0label.setAlignmentX(Component.CENTER_ALIGNMENT);
         p0label.setAlignmentY(Component.TOP_ALIGNMENT);
@@ -313,30 +326,28 @@ public class GUI {
         this.playerThreePanel.add(p3label);
 
         GridBagConstraints constraints = new GridBagConstraints();
-        constraints.fill = GridBagConstraints.BOTH;
+        constraints.weightx = 0;
+        constraints.weighty = 0;
+        constraints.fill = GridBagConstraints.NONE;
 
         constraints.gridx = 1;
         constraints.gridy = 2;
-        constraints.weightx = 1;
-        constraints.weighty = 0.2;
+        constraints.anchor = GridBagConstraints.SOUTH;
         this.frame.add(playerZeroPanel, constraints);
 
         constraints.gridx = 2;
         constraints.gridy = 1;
-        constraints.weightx = 0.2;
-        constraints.weighty = 1;
+        constraints.anchor = GridBagConstraints.EAST;
         this.frame.add(playerOnePanel, constraints);
 
         constraints.gridx = 1;
         constraints.gridy = 0;
-        constraints.weightx = 1;
-        constraints.weighty = 0.2;
+        constraints.anchor = GridBagConstraints.NORTH;
         this.frame.add(playerTwoPanel, constraints);
 
         constraints.gridx = 0;
         constraints.gridy = 1;
-        constraints.weightx = 0.2;
-        constraints.weighty = 1;
+        constraints.anchor = GridBagConstraints.WEST;
         this.frame.add(playerThreePanel, constraints);
     }
 
@@ -364,7 +375,7 @@ public class GUI {
         centerCardGraphicConstraints.gridx = 1;
         centerCardGraphicConstraints.gridy = 2;
         centerCardGraphicConstraints.fill = GridBagConstraints.BOTH;
-        centerCardGraphicConstraints.insets = new Insets(-60, 0, 0, 0);
+        centerCardGraphicConstraints.insets = new Insets(-20, 0, 0, 0);
         centerCardGraphicConstraints.weightx = 0.5;
         centerCardGraphicConstraints.weighty = 0.5;
         this.centerPanel.add(this.cardBackSideStackImage, centerCardGraphicConstraints);
@@ -417,9 +428,9 @@ public class GUI {
         centerCardGraphicConstraints.gridx = 1;
         centerCardGraphicConstraints.gridy = 2;
         centerCardGraphicConstraints.fill = GridBagConstraints.BOTH;
-        centerCardGraphicConstraints.insets = new Insets(-80, 0, 0, 0);
-        centerCardGraphicConstraints.weightx = 0.5;
-        centerCardGraphicConstraints.weighty = 0.5;
+        centerCardGraphicConstraints.insets = new Insets(-20, 0, 0, 0);
+        centerCardGraphicConstraints.weightx = 1;
+        centerCardGraphicConstraints.weighty = 1;
         if (faceDown) {
             this.centerPanel.add(this.cardBackSideStackImage, centerCardGraphicConstraints);
         } else {
@@ -478,13 +489,15 @@ public class GUI {
         centerCardGraphicConstraints.gridy = 2;
         centerCardGraphicConstraints.fill = GridBagConstraints.BOTH;
         centerCardGraphicConstraints.insets = new Insets(-20, 0, 0, 0);
-        centerCardGraphicConstraints.weightx = 0.5;
-        centerCardGraphicConstraints.weighty = 0.5;
+        centerCardGraphicConstraints.weightx = 1;
+        centerCardGraphicConstraints.weighty = 1;
         this.centerPanel.add(this.cardBackSideStackImage, centerCardGraphicConstraints);
 
+        // Honestly, all of this magic modular math I did to figure out which card belongs to who,
+        // it was trial and error. Good luck ever trying to retrace this.
         int[][] gridPositions = {
             {1, 3}, // Player 0, bottom
-            {3, 2}, // Player 1, right
+            {2, 2}, // Player 1, right
             {1, 0}, // Player 2, top
             {0, 2}, // Player 3, left
         };
@@ -508,7 +521,7 @@ public class GUI {
             this.centerPanel.add(new JLabel(new ImageIcon(cardImageMap.get(this.engine.trickPlayedCards.getDeck()[i].name.toLowerCase().replaceAll("\\s+", "")).getImage().getScaledInstance(80, 120, Image.SCALE_SMOOTH))), tempConstraints);
         }
 
-        // Fill all empty spots with placeholder panels
+        // Fill all empty played card spots with placeholder panels
         for (int i = cardsPlayed; i < 4; i++) {
             int[] pos = gridPositions[i];
 
@@ -522,6 +535,56 @@ public class GUI {
 
             this.centerPanel.add(new JPanel(), tempConstraints);
         }
+        
+        // Fill empty centerPanel spots with empty JPanels. Gonna do this manually. I hope I'm allowed into Heaven
+        // We need to fill six spots: (0,0), (2,0), (0,1), (2,1), (0,3), (2,3)
+        GridBagConstraints tempConstraints = new GridBagConstraints();
+        tempConstraints.insets = new Insets(10, 10, 10, 10);
+        tempConstraints.fill = GridBagConstraints.BOTH;
+        tempConstraints.weightx = 0.5;
+        tempConstraints.weighty = 0.5;
+
+        JPanel tempPanel0 = new JPanel();
+        tempPanel0.setMinimumSize(new Dimension((int)(this.frame.getWidth() * 0.08), (int)(this.frame.getWidth() * 0.08)));
+        tempPanel0.setPreferredSize(new Dimension((int)(this.frame.getWidth() * 0.08), (int)(this.frame.getWidth() * 0.08)));
+        tempConstraints.gridx = 0;
+        tempConstraints.gridy = 0;
+        this.centerPanel.add(tempPanel0, tempConstraints);
+
+        JPanel tempPanel1 = new JPanel();
+        tempPanel1.setMinimumSize(new Dimension((int)(this.frame.getWidth() * 0.08), (int)(this.frame.getWidth() * 0.08)));
+        tempPanel1.setPreferredSize(new Dimension((int)(this.frame.getWidth() * 0.08), (int)(this.frame.getWidth() * 0.08)));
+        tempConstraints.gridx = 2;
+        tempConstraints.gridy = 0;
+        this.centerPanel.add(tempPanel1, tempConstraints);
+
+        JPanel tempPanel2 = new JPanel();
+        tempPanel2.setMinimumSize(new Dimension((int)(this.frame.getWidth() * 0.08), (int)(this.frame.getWidth() * 0.08)));
+        tempPanel2.setPreferredSize(new Dimension((int)(this.frame.getWidth() * 0.08), (int)(this.frame.getWidth() * 0.08)));
+        tempConstraints.gridx = 0;
+        tempConstraints.gridy = 1;
+        this.centerPanel.add(tempPanel2, tempConstraints);
+
+        JPanel tempPanel3 = new JPanel();
+        tempPanel3.setMinimumSize(new Dimension((int)(this.frame.getWidth() * 0.08), (int)(this.frame.getWidth() * 0.08)));
+        tempPanel3.setPreferredSize(new Dimension((int)(this.frame.getWidth() * 0.08), (int)(this.frame.getWidth() * 0.08)));
+        tempConstraints.gridx = 2;
+        tempConstraints.gridy = 1;
+        this.centerPanel.add(tempPanel3, tempConstraints);
+
+        JPanel tempPanel4 = new JPanel();
+        tempPanel4.setMinimumSize(new Dimension((int)(this.frame.getWidth() * 0.08), (int)(this.frame.getWidth() * 0.08)));
+        tempPanel4.setPreferredSize(new Dimension((int)(this.frame.getWidth() * 0.08), (int)(this.frame.getWidth() * 0.08)));
+        tempConstraints.gridx = 0;
+        tempConstraints.gridy = 3;
+        this.centerPanel.add(tempPanel4, tempConstraints);
+
+        JPanel tempPanel5 = new JPanel();
+        tempPanel5.setMinimumSize(new Dimension((int)(this.frame.getWidth() * 0.08), (int)(this.frame.getWidth() * 0.08)));
+        tempPanel5.setPreferredSize(new Dimension((int)(this.frame.getWidth() * 0.08), (int)(this.frame.getWidth() * 0.08)));
+        tempConstraints.gridx = 2;
+        tempConstraints.gridy = 3;
+        this.centerPanel.add(tempPanel5, tempConstraints);
 
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.gridx = 1;
@@ -817,6 +880,9 @@ public class GUI {
     private void loadImages() {
         this.cardBackSideImage = new ScaledImagePanel(new ImageIcon(getClass().getResource("/cardbackside.png")).getImage());
         this.cardBackSideStackImage = new ScaledImagePanel(new ImageIcon(getClass().getResource("/cardbacksidestack.png")).getImage());
+        this.cardBackSideStackImage.setMinimumSize(new Dimension(80, 100));
+        this.cardBackSideStackImage.setPreferredSize(new Dimension(80, 100));
+        this.cardBackSideStackImage.setMaximumSize(new Dimension(80, 100));
 
         this.nineOfHearts = new ScaledImagePanel(new ImageIcon(getClass().getResource("/LightCards/nineofhearts.png")).getImage());
         this.tenOfHearts = new ScaledImagePanel(new ImageIcon(getClass().getResource("/LightCards/tenofhearts.png")).getImage());
