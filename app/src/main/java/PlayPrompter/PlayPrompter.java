@@ -1,25 +1,11 @@
-import javax.swing.SwingUtilities;
+package PlayPrompter;
 
 import Euchre.*;
+import GUI.GUI;
 import Logging.*;
 import MachineLearning.*;
 
-public class PlayPrompter {
-
-    public int playSpeed;
-
-    public int playerTurn; // Identifies whose turn it is inside a trick
-    public boolean trumpCalled;
-
-    private EuchreEngine engine;
-    private GUI gui;
-    
-    private boolean firstInit;
-    private boolean firstGame;
-
-    private MasterLogger logger;
-
-    private CoinTosser tosser;
+public class PlayPrompter extends MasterPrompter {
     
     /**
      * Create a new PlayPrompter instance.
@@ -27,7 +13,7 @@ public class PlayPrompter {
      * @param gui pass in a GUI instance.
      * @param playSpeed in milliseconds how long of a pause between each step of play.
      */
-    PlayPrompter(MasterLogger logger, GUI gui, int playSpeed) {
+    public PlayPrompter(MasterLogger logger, GUI gui, int playSpeed) {
         this.firstInit = true;
         this.firstGame = true;
         this.playSpeed = playSpeed;
@@ -290,28 +276,4 @@ public class PlayPrompter {
             this.sleep(5000);
         }
     }
-
-    /**
-     * This idiot needs to be called every time I want to break mainLoop()'s
-     * big while() loop. This will be necessary every time I want to update the
-     * Swing stuff
-     * 
-     * @param action any command. Anything.
-     */
-    public void run(Runnable action) {
-        try {
-            SwingUtilities.invokeAndWait(action);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void sleep(long millis) {
-        try {
-            Thread.sleep(millis);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-
 }

@@ -1,3 +1,4 @@
+package GUI;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 
@@ -19,6 +20,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import Euchre.Card;
 import Euchre.Deck;
 import Euchre.EuchreEngine;
+import PlayPrompter.MasterPrompter;
 
 public class GUI {
 
@@ -56,16 +58,16 @@ public class GUI {
     private int windowHeight;
     private String windowName;
 
-    private PlayPrompter prompter;
+    private MasterPrompter prompter;
     private EuchreEngine engine;
 
-    GUI(int windowWidth, int windowHeight, String windowName) {
+    public GUI(int windowWidth, int windowHeight, String windowName) {
         this.windowWidth = windowWidth;
         this.windowHeight = windowHeight;
         this.windowName = windowName;
     }
 
-    GUI() {
+    public GUI() {
         this.windowWidth = WINDOW_WIDTH;
         this.windowHeight = WINDOW_HEIGHT;
         this.windowName = WINDOW_NAME;
@@ -91,9 +93,9 @@ public class GUI {
     /**
      * MUST BE SET. This is just a delayed constructor thing to solve circular dependencies.
      * 
-     * @param prompter the PlayPrompter running the Euchre game.
+     * @param prompter the MasterPrompter (extension) running the Euchre game.
      */
-    public void setPrompter(PlayPrompter prompter) {
+    public void setPrompter(MasterPrompter prompter) {
         this.prompter = prompter;
     }
 
@@ -802,36 +804,36 @@ public class GUI {
      * Lord forgive me for my sins. Allow me into your kingdom when it is my time.
      */
     private void loadImages() {
-        this.cardBackSideImage = new ScaledImagePanel(new ImageIcon(getClass().getResource("cardbackside.png")).getImage());
-        this.cardBackSideStackImage = new ScaledImagePanel(new ImageIcon(getClass().getResource("cardbacksidestack.png")).getImage());
+        this.cardBackSideImage = new ScaledImagePanel(new ImageIcon(getClass().getResource("/cardbackside.png")).getImage());
+        this.cardBackSideStackImage = new ScaledImagePanel(new ImageIcon(getClass().getResource("/cardbacksidestack.png")).getImage());
 
-        this.nineOfHearts = new ScaledImagePanel(new ImageIcon(getClass().getResource("LightCards/nineofhearts.png")).getImage());
-        this.tenOfHearts = new ScaledImagePanel(new ImageIcon(getClass().getResource("LightCards/tenofhearts.png")).getImage());
-        this.jackOfHearts = new ScaledImagePanel(new ImageIcon(getClass().getResource("LightCards/jackofhearts.png")).getImage());
-        this.queenOfHearts = new ScaledImagePanel(new ImageIcon(getClass().getResource("LightCards/queenofhearts.png")).getImage());
-        this.kingOfHearts = new ScaledImagePanel(new ImageIcon(getClass().getResource("LightCards/kingofhearts.png")).getImage());
-        this.aceOfHearts = new ScaledImagePanel(new ImageIcon(getClass().getResource("LightCards/aceofhearts.png")).getImage());
+        this.nineOfHearts = new ScaledImagePanel(new ImageIcon(getClass().getResource("/LightCards/nineofhearts.png")).getImage());
+        this.tenOfHearts = new ScaledImagePanel(new ImageIcon(getClass().getResource("/LightCards/tenofhearts.png")).getImage());
+        this.jackOfHearts = new ScaledImagePanel(new ImageIcon(getClass().getResource("/LightCards/jackofhearts.png")).getImage());
+        this.queenOfHearts = new ScaledImagePanel(new ImageIcon(getClass().getResource("/LightCards/queenofhearts.png")).getImage());
+        this.kingOfHearts = new ScaledImagePanel(new ImageIcon(getClass().getResource("/LightCards/kingofhearts.png")).getImage());
+        this.aceOfHearts = new ScaledImagePanel(new ImageIcon(getClass().getResource("/LightCards/aceofhearts.png")).getImage());
 
-        this.nineOfDiamonds = new ScaledImagePanel(new ImageIcon(getClass().getResource("LightCards/nineofdiamonds.png")).getImage());
-        this.tenOfDiamonds = new ScaledImagePanel(new ImageIcon(getClass().getResource("LightCards/tenofdiamonds.png")).getImage());
-        this.jackOfDiamonds = new ScaledImagePanel(new ImageIcon(getClass().getResource("LightCards/jackofdiamonds.png")).getImage());
-        this.queenOfDiamonds = new ScaledImagePanel(new ImageIcon(getClass().getResource("LightCards/queenofdiamonds.png")).getImage());
-        this.kingOfDiamonds = new ScaledImagePanel(new ImageIcon(getClass().getResource("LightCards/kingofdiamonds.png")).getImage());
-        this.aceOfDiamonds = new ScaledImagePanel(new ImageIcon(getClass().getResource("LightCards/aceofdiamonds.png")).getImage());
+        this.nineOfDiamonds = new ScaledImagePanel(new ImageIcon(getClass().getResource("/LightCards/nineofdiamonds.png")).getImage());
+        this.tenOfDiamonds = new ScaledImagePanel(new ImageIcon(getClass().getResource("/LightCards/tenofdiamonds.png")).getImage());
+        this.jackOfDiamonds = new ScaledImagePanel(new ImageIcon(getClass().getResource("/LightCards/jackofdiamonds.png")).getImage());
+        this.queenOfDiamonds = new ScaledImagePanel(new ImageIcon(getClass().getResource("/LightCards/queenofdiamonds.png")).getImage());
+        this.kingOfDiamonds = new ScaledImagePanel(new ImageIcon(getClass().getResource("/LightCards/kingofdiamonds.png")).getImage());
+        this.aceOfDiamonds = new ScaledImagePanel(new ImageIcon(getClass().getResource("/LightCards/aceofdiamonds.png")).getImage());
 
-        this.nineOfClubs = new ScaledImagePanel(new ImageIcon(getClass().getResource("LightCards/nineofclubs.png")).getImage());
-        this.tenOfClubs = new ScaledImagePanel(new ImageIcon(getClass().getResource("LightCards/tenofclubs.png")).getImage());
-        this.jackOfClubs = new ScaledImagePanel(new ImageIcon(getClass().getResource("LightCards/jackofclubs.png")).getImage());
-        this.queenOfClubs = new ScaledImagePanel(new ImageIcon(getClass().getResource("LightCards/queenofclubs.png")).getImage());
-        this.kingOfClubs = new ScaledImagePanel(new ImageIcon(getClass().getResource("LightCards/kingofclubs.png")).getImage());
-        this.aceOfClubs = new ScaledImagePanel(new ImageIcon(getClass().getResource("LightCards/aceofclubs.png")).getImage());
+        this.nineOfClubs = new ScaledImagePanel(new ImageIcon(getClass().getResource("/LightCards/nineofclubs.png")).getImage());
+        this.tenOfClubs = new ScaledImagePanel(new ImageIcon(getClass().getResource("/LightCards/tenofclubs.png")).getImage());
+        this.jackOfClubs = new ScaledImagePanel(new ImageIcon(getClass().getResource("/LightCards/jackofclubs.png")).getImage());
+        this.queenOfClubs = new ScaledImagePanel(new ImageIcon(getClass().getResource("/LightCards/queenofclubs.png")).getImage());
+        this.kingOfClubs = new ScaledImagePanel(new ImageIcon(getClass().getResource("/LightCards/kingofclubs.png")).getImage());
+        this.aceOfClubs = new ScaledImagePanel(new ImageIcon(getClass().getResource("/LightCards/aceofclubs.png")).getImage());
 
-        this.nineOfSpades = new ScaledImagePanel(new ImageIcon(getClass().getResource("LightCards/nineofspades.png")).getImage());
-        this.tenOfSpades = new ScaledImagePanel(new ImageIcon(getClass().getResource("LightCards/tenofspades.png")).getImage());
-        this.jackOfSpades = new ScaledImagePanel(new ImageIcon(getClass().getResource("LightCards/jackofspades.png")).getImage());
-        this.queenOfSpades = new ScaledImagePanel(new ImageIcon(getClass().getResource("LightCards/queenofspades.png")).getImage());
-        this.kingOfSpades = new ScaledImagePanel(new ImageIcon(getClass().getResource("LightCards/kingofspades.png")).getImage());
-        this.aceOfSpades = new ScaledImagePanel(new ImageIcon(getClass().getResource("LightCards/aceofspades.png")).getImage());
+        this.nineOfSpades = new ScaledImagePanel(new ImageIcon(getClass().getResource("/LightCards/nineofspades.png")).getImage());
+        this.tenOfSpades = new ScaledImagePanel(new ImageIcon(getClass().getResource("/LightCards/tenofspades.png")).getImage());
+        this.jackOfSpades = new ScaledImagePanel(new ImageIcon(getClass().getResource("/LightCards/jackofspades.png")).getImage());
+        this.queenOfSpades = new ScaledImagePanel(new ImageIcon(getClass().getResource("/LightCards/queenofspades.png")).getImage());
+        this.kingOfSpades = new ScaledImagePanel(new ImageIcon(getClass().getResource("/LightCards/kingofspades.png")).getImage());
+        this.aceOfSpades = new ScaledImagePanel(new ImageIcon(getClass().getResource("/LightCards/aceofspades.png")).getImage());
     }
 
     private void initCardImageMap() {

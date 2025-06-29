@@ -133,3 +133,7 @@ public class Logger implements MasterLogger {
         return i;
     }
 }
+
+
+// Log trick info
+//this.logger.recordBotPlayInfo(this.engine.trickPlayedCards.getDeck()[2], winner == 2, winner == 2 || winner == 0);
