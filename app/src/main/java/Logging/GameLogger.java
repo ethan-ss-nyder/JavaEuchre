@@ -19,7 +19,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
-public class Logger implements MasterLogger {
+public class GameLogger implements MasterLogger {
 
     String fileName = "";
     int ID; // ID is synonymous with line number in the .jsonl file
@@ -28,7 +28,7 @@ public class Logger implements MasterLogger {
     JSONArray tricks;
     JSONObject trick;
     
-    Logger(String fileName) {
+    public GameLogger(String fileName) {
         this.fileName = fileName;
         this.ID = this.getLineCount();
         this.round = new JSONObject();

@@ -4,7 +4,7 @@ import Euchre.*;
 import GUI.GUI;
 import Logging.*;
 
-public class PlayPrompter extends MasterPrompter {
+public class AutoGUIPlayPrompter extends MasterPrompter {
     
     /**
      * Create a new PlayPrompter instance.
@@ -12,23 +12,25 @@ public class PlayPrompter extends MasterPrompter {
      * @param gui pass in a GUI instance.
      * @param playSpeed in milliseconds how long of a pause between each step of play.
      */
-    public PlayPrompter(MasterLogger logger, GUI gui, EuchreEngine engine, int playSpeed) {
+    public AutoGUIPlayPrompter(MasterLogger logger, GUI gui, EuchreEngine engine, int playSpeed) {
         this.firstInit = true;
         this.playSpeed = playSpeed;
         this.logger = logger;
         this.gui = gui;
         this.engine = engine;
         
+        this.gui.allFaceUp = true;
         this.init();
     }
 
-    @Override
     public void mainLoop() {
 
         while(this.engine.teamOneScore < 10 && this.engine.teamTwoScore < 10) {
+
             this.deal();
             this.bid();
             this.playTricks();
+            
         }
 
         if (this.engine.teamOneScore >= 10) {
@@ -39,5 +41,20 @@ public class PlayPrompter extends MasterPrompter {
             gui.updateMainText("Team two wins the game!");
             this.sleep(5000);
         }
+    }
+
+    @Override
+    protected void deal() {
+
+    }
+
+    @Override
+    protected void bid() {
+        
+    }
+
+    @Override
+    protected void playTricks() {
+
     }
 }
