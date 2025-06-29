@@ -1,3 +1,4 @@
+import Euchre.EuchreEngine;
 import GUI.GUI;
 import Logging.*;
 import PlayPrompter.PlayPrompter;
@@ -10,7 +11,6 @@ public class Main {
 
     public static void main(String args[]) {
         // Set up the GUI and Prompter to see each other.
-        GUI gui = new GUI();
-        new PlayPrompter(new AntiLogger(), gui, PLAY_SPEED);
+        new PlayPrompter(new AntiLogger(), new GUI(), new EuchreEngine(), PLAY_SPEED);
     }
 }

@@ -442,6 +442,7 @@ public class GUI {
         this.frame.repaint();
     }
 
+    // TODO: I just noticed this is incomplete, I clearly wanted this done at some point
     public void displayLeader() {
         
     }
@@ -526,6 +527,9 @@ public class GUI {
         this.frame.repaint();
     }
 
+    /**
+     * Potentially antequated. From a day in pre-history when I wanted to trigger mainLoop() from the prompt.
+     */
     public void buildShuffleButtons() {
 
         AtomicBoolean shuffled = new AtomicBoolean(false);

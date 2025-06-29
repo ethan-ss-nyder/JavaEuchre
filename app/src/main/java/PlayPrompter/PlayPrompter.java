@@ -3,7 +3,6 @@ package PlayPrompter;
 import Euchre.*;
 import GUI.GUI;
 import Logging.*;
-import MachineLearning.*;
 
 public class PlayPrompter extends MasterPrompter {
     
@@ -13,78 +12,31 @@ public class PlayPrompter extends MasterPrompter {
      * @param gui pass in a GUI instance.
      * @param playSpeed in milliseconds how long of a pause between each step of play.
      */
-    public PlayPrompter(MasterLogger logger, GUI gui, int playSpeed) {
+    public PlayPrompter(MasterLogger logger, GUI gui, EuchreEngine engine, int playSpeed) {
         this.firstInit = true;
-        this.firstGame = true;
         this.playSpeed = playSpeed;
         this.logger = logger;
         this.gui = gui;
+        this.engine = engine;
         
         this.init();
-    }
-
-    public void init() {
-        this.playerTurn = 0;
-        this.trumpCalled = false;
-
-        // GUI and Prompter have much circular dependency.
-        // This quarantine is necessary to avoid "New Game" catastrophes.
-        // TODO: actually fix this.
-        if (firstInit) {
-            gui.setPrompter(this);
-            gui.init();
-            firstInit = false;
-        }
-        this.engine = new EuchreEngine();
-        this.engine.init();
-        this.gui.setEngine(engine);
-        this.tosser = new CoinTosser(this.engine);
-
-        // Randomly roll for dealer, set leader (player who leads bidding round and first hand of trick)
-        gui.updateMainText("Initializing game...");
-        this.sleep(playSpeed);
-        gui.updateMainText("Randomly deciding who goes first...");
-        this.sleep(playSpeed);
-        this.engine.dealer = (int)(Math.random() * 4);
-        this.engine.leader = (this.engine.dealer + 1)%4;
-
-        // Handles shuffling or prompting user to shuffle.
-            if (this.engine.dealer == 0) {
-                gui.updateMainText("You're dealer!");
-                this.sleep(playSpeed);
-                gui.updateMainText("Shuffle the deck a few times.");
-                gui.buildShuffleButtons();
-            } else {
-                gui.updateMainText("Player " + this.engine.dealer + " is dealer.");
-                engine.deck.shuffle();
-                this.sleep(playSpeed);
-                mainLoop();
-            }
     }
 
     public void mainLoop() {
 
         while(this.engine.teamOneScore < 10 && this.engine.teamTwoScore < 10) {
 
-            // Handles shuffling or prompting user to shuffle.
-            if (this.engine.dealer == 0 && !firstGame) {
-                gui.updateMainText("You're dealer!");
-                this.sleep(this.playSpeed);
-                gui.updateMainText("Shuffle the deck a few times.");
-                gui.buildShuffleButtonsNoLoop();
-            } else if (this.engine.dealer != 0 && !firstGame) {
-                gui.updateMainText("Player " + this.engine.dealer + " is dealer.");
-                engine.deck.shuffle();
-                this.sleep(this.playSpeed);
-            }
-
             /**
              * Dealing.
              */
             if (this.engine.dealer == 0) {
                 gui.updateMainText("You are dealing.");
+                this.sleep(this.playSpeed);
+                gui.updateMainText("Shuffle the deck a few times.");
+                gui.buildShuffleButtonsNoLoop();
             } else {
                 gui.updateMainText("Player " + this.engine.dealer + " is dealing.");
+                this.engine.deck.shuffle();
             }
             this.run(() -> this.gui.displayTrickInfo());
             this.sleep(playSpeed);
@@ -95,14 +47,14 @@ public class PlayPrompter extends MasterPrompter {
                     final int index = j;
                     final int index2 = i;
                     this.run(() -> gui.displayHandDown(index, index2));
-                    engine.playerHands[j].add(engine.deck.pop());
+                    this.engine.playerHands[j].add(this.engine.deck.pop());
                     this.sleep(100);
                 }
             }
 
             // Pause, then reveal the player his/her hand
             this.sleep(playSpeed);
-            this.run(() -> gui.displayHand(0, engine.playerHands[0]));
+            this.run(() -> gui.displayHand(0, this.engine.playerHands[0]));
             this.sleep(playSpeed);
 
             // Put bidding card in the center
@@ -263,7 +215,6 @@ public class PlayPrompter extends MasterPrompter {
             this.gui.displayScore();
             this.engine.resetAfterTricks();
             this.engine.dealer = (this.engine.dealer + 1)%4;
-            this.firstGame = false;
             this.sleep(5000);
         }
 

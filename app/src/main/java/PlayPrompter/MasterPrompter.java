@@ -15,7 +15,6 @@ public abstract class MasterPrompter {
     public boolean trumpCalled;
     
     protected boolean firstInit;
-    protected boolean firstGame;
 
     protected MasterLogger logger;
     protected CoinTosser tosser;
@@ -24,13 +23,10 @@ public abstract class MasterPrompter {
 
     /**
      * Initiates a new game of Euchre by resetting PlayPrompter and giving the GUI the fresh instance.
-     * Also handles the initial shuffling and bidding before the loopable 5 trick code.
+     * Randomly picks a dealer.
      */
     public void init() {
-        this.playerTurn = 0;
-        this.trumpCalled = false;
 
-        // GUI and Prompter have much circular dependency.
         // This quarantine is necessary to avoid "New Game" catastrophes.
         // TODO: actually fix this.
         if (firstInit) {
@@ -38,10 +34,11 @@ public abstract class MasterPrompter {
             gui.init();
             firstInit = false;
         }
-        this.engine = new EuchreEngine();
         this.engine.init();
         this.gui.setEngine(engine);
         this.tosser = new CoinTosser(this.engine);
+        this.playerTurn = 0;
+        this.trumpCalled = false;
 
         // Randomly roll for dealer, set leader (player who leads bidding round and first hand of trick)
         gui.updateMainText("Initializing game...");
@@ -51,19 +48,9 @@ public abstract class MasterPrompter {
         this.engine.dealer = (int)(Math.random() * 4);
         this.engine.leader = (this.engine.dealer + 1)%4;
 
-        // Handles shuffling or prompting user to shuffle.
-            if (this.engine.dealer == 0) {
-                gui.updateMainText("You're dealer!");
-                this.sleep(playSpeed);
-                gui.updateMainText("Shuffle the deck a few times.");
-                gui.buildShuffleButtons();
-            } else {
-                gui.updateMainText("Player " + this.engine.dealer + " is dealer.");
-                engine.deck.shuffle();
-                this.sleep(playSpeed);
-                mainLoop();
-            }
+        this.mainLoop();
     }
+    
     public abstract void mainLoop();
 
     /**

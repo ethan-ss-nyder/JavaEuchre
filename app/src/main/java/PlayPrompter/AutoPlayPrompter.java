@@ -15,7 +15,6 @@ public class AutoPlayPrompter extends MasterPrompter {
      */
     public AutoPlayPrompter(MasterLogger logger, GUI gui, int playSpeed) {
         this.firstInit = true;
-        this.firstGame = true;
         this.playSpeed = playSpeed;
         this.logger = logger;
         this.gui = gui;
@@ -26,18 +25,6 @@ public class AutoPlayPrompter extends MasterPrompter {
     public void mainLoop() {
 
         while(this.engine.teamOneScore < 10 && this.engine.teamTwoScore < 10) {
-
-            // Handles shuffling or prompting user to shuffle.
-            if (this.engine.dealer == 0 && !firstGame) {
-                gui.updateMainText("You're dealer!");
-                this.sleep(this.playSpeed);
-                gui.updateMainText("Shuffle the deck a few times.");
-                gui.buildShuffleButtonsNoLoop();
-            } else if (this.engine.dealer != 0 && !firstGame) {
-                gui.updateMainText("Player " + this.engine.dealer + " is dealer.");
-                engine.deck.shuffle();
-                this.sleep(this.playSpeed);
-            }
 
             /**
              * Dealing.
@@ -224,7 +211,6 @@ public class AutoPlayPrompter extends MasterPrompter {
             this.gui.displayScore();
             this.engine.resetAfterTricks();
             this.engine.dealer = (this.engine.dealer + 1)%4;
-            this.firstGame = false;
             this.sleep(5000);
         }
 
