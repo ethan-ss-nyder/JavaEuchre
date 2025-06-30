@@ -23,14 +23,16 @@ public class AutoGUIPlayPrompter extends MasterPrompter {
         this.init();
     }
 
+    @Override
     public void mainLoop() {
-
+        // Main gameplay loop regulated by win conditions
         while(this.engine.teamOneScore < 10 && this.engine.teamTwoScore < 10) {
             this.deal();
             this.bid();
             this.playTricks();
         }
 
+        // Update display based on win condition
         if (this.engine.teamOneScore >= 10) {
             gui.updateMainText("Team one wins the game!");
             this.sleep(playSpeed * 5);
@@ -39,12 +41,12 @@ public class AutoGUIPlayPrompter extends MasterPrompter {
             this.sleep(playSpeed * 5);
         }
 
+        // After each game, initialize the prompter and restart
         this.init();
     }
 
     @Override
     protected void deal() {
-
         // Have the dealer shuffle the deck
         this.gui.updateMainText("Player " + this.engine.dealer + " is dealing.");
         this.engine.deck.shuffle();
@@ -157,6 +159,7 @@ public class AutoGUIPlayPrompter extends MasterPrompter {
             int winner = this.engine.getWinner(true);
             this.gui.displayScore();
             this.gui.updateMainText("Player " + winner + " wins this trick.");
+            this.logger.recordTrickStateAtBotTurn(this.engine.trickScore[0] + this.engine.trickScore[1], this.engine.trickScore[0], this.engine.playerHands[0], this.engine.trickPlayedCards, this.engine.trickPlayedCards.getDeck()[2], winner == 0 || winner == 2, (this.engine.leader + 1)%4);
             this.playerTurn = winner;
             this.engine.leader = winner;
             this.engine.resetLedSuit();
@@ -175,6 +178,7 @@ public class AutoGUIPlayPrompter extends MasterPrompter {
         this.gui.displayScore();
         this.engine.resetAfterTricks();
         this.engine.dealer = (this.engine.dealer + 1)%4;
+        this.engine.roundNumber++;
         this.sleep(playSpeed * 4);
     }
 }

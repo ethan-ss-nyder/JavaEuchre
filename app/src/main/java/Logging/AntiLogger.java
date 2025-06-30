@@ -17,7 +17,7 @@ public class AntiLogger implements MasterLogger {
     }
 
     @Override
-    public void recordTrickStateAtBotTurn(double tricksPlayed, double tricksWon, Deck hand, Deck playedCards, Card teamPlayedCard, boolean teamWon, int playOrder) {
+    public void recordTrickStateAtBotTurn(int tricksPlayed, int tricksWon, Deck hand, Deck playedCards, Card teamPlayedCard, boolean teamWon, int playOrder) {
     }
 
     @Override

@@ -63,20 +63,20 @@ public class GameLogger implements MasterLogger {
     /**
      * Records trick state information at the time of the bot's turn.
      * 
-     * @param tricksPlayed Total number of tricks played previous to the current trick being built divided by 5.
-     * @param tricksWon Total number of tricks won previous to the current trick being built divided by 5.
+     * @param tricksPlayed Total number of tricks played previous to the current trick being built.
+     * @param tricksWon Total number of tricks won previous to the current trick being built.
      * @param hand The bot's hand before play.
      * @param playedCards All played cards present in play at the time of the bot's turn.
      * @param teamPlayedCard The card the bot's teammate has played. Can be null.
      * @param teamWon True is bot's teammate has won the trick so far. False if not.
      * @param playOrder An integer representing the bot's play turn, 0-3.
      */
-    public void recordTrickStateAtBotTurn(double tricksPlayed, double tricksWon, Deck hand, Deck playedCards, Card teamPlayedCard, boolean teamWon, int playOrder) {
+    public void recordTrickStateAtBotTurn(int tricksPlayed, int tricksWon, Deck hand, Deck playedCards, Card teamPlayedCard, boolean teamWon, int playOrder) {
         trick.put("TricksTotal", tricksPlayed);
         trick.put("TricksWon", tricksWon);
-        trick.put("Hand", hand);
-        trick.put("PlayedCards", playedCards);
-        trick.put("HasTeamPlayed", teamPlayedCard);
+        trick.put("Hand", hand.getDeck().toString());
+        trick.put("PlayedCards", playedCards.getDeck().toString());
+        trick.put("HasTeamPlayed", teamPlayedCard.name);
         trick.put("HasTeamWon", teamWon);
         trick.put("PlayOrder", playOrder);
     }

@@ -256,6 +256,7 @@ public abstract class MasterPrompter {
         this.gui.displayScore();
         this.engine.resetAfterTricks();
         this.engine.dealer = (this.engine.dealer + 1)%4;
+        this.engine.roundNumber++;
         this.sleep(playSpeed * 4);
     }
 

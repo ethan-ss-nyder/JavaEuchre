@@ -7,7 +7,7 @@ public class Main {
 
     // This is a generic pause variable used across PlayPrompter objects which calls GUI functions,
     // so make this small for very fast GUI updates, make it large for longer "animations".
-    private final static int PLAY_SPEED = 500;
+    private final static int PLAY_SPEED = 0;
 
     public static void main(String args[]) {
         

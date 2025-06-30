@@ -14,6 +14,7 @@ public class EuchreEngine {
     public int[] trickScore = {0, 0}; // First element is the tricks taken by team one, second element is tricks by team two
     public int teamOneScore;
     public int teamTwoScore;
+    public int roundNumber;
 
     public int leader; // Identifies the player 0-3 who is leading
     public int dealer; // Identifies the player 0-3 who is the dealer
@@ -47,6 +48,7 @@ public class EuchreEngine {
         this.dealer = -1;
         this.teamOneScore = 0;
         this.teamTwoScore = 0;
+        this.roundNumber = 0;
 
         this.trickPlayedCards = new Deck();
         this.playedCards = new Deck();
@@ -187,7 +189,7 @@ public class EuchreEngine {
     int winner = this.leader;
     Card bestCard = trickPlayedCards.getDeck()[0];
 
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < this.trickPlayedCards.getDeck().length; i++) {
         int player = (this.leader + i) % 4;
 
         if (this.cardRank(trickPlayedCards.getDeck()[i]) > this.cardRank(bestCard)) {
